@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, View, Alert } from 'react-native';
+import { FlatList, StyleSheet, View, Alert, Pressable } from 'react-native';
+import { useRouter } from 'expo-router';
 import getBooks, { deleteBook } from '@/service/BookService';
 import type { Book } from '@/model/Book';
 import BookCard from '@/component/BookCard';
 
 export default function BooksScreen() {
+  const router = useRouter();
   const [books, setBooks] = useState<Book[]>([]);
 
   useEffect(() => {
@@ -26,7 +28,11 @@ export default function BooksScreen() {
       <FlatList
         data={books}
         keyExtractor={(item) => String(item.id)}
-        renderItem={({ item }) => <BookCard book={item} onDelete={handleDelete} />}
+        renderItem={({ item }) => (
+          <Pressable onPress={() => router.push(`/books/${item.id}`)} android_ripple={{ color: '#eee' }}>
+            <BookCard book={item} onDelete={handleDelete} />
+          </Pressable>
+        )}
         ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
         contentContainerStyle={{ padding: 12 }}
       />

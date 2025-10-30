@@ -38,7 +38,7 @@ export default function BookCard({
 
       <View style={styles.txtInCard}>
         <Text style={styles.title}>{book.name}</Text>
-          <Text style={styles.idText}>ID: {book.id}</Text>
+        <Text style={styles.idText}>ID: {book.id}</Text>
         {book.author ? <Text style={styles.author}>Auteur : {book.author}</Text> : null}
         {book.editor ? <Text style={styles.editor}>Editeur : {book.editor}</Text> : null}
         {book.year ? <Text style={styles.year}>Année : {String(book.year)}</Text> : null}
@@ -143,4 +143,5 @@ const styles = StyleSheet.create({
     color: '#888',
     fontSize: 12,
   },
+  
 });
