@@ -17,6 +17,7 @@ export default async function getBooks(): Promise<Book[]> {
       author: b.author ?? undefined,
       year: b.year != null ? Number(b.year) : undefined,
       cover: b.cover ?? null,
+      rating: b.rating != null ? Number(b.rating) : null,
     }));
   } catch (err) {
     return [];
@@ -70,6 +71,7 @@ export async function getBook(id: number) {
       author: b.author ?? undefined,
       year: b.year != null ? Number(b.year) : undefined,
       cover: b.cover ?? null,
+      rating: b.rating != null ? Number(b.rating) : null,
     } as Book;
   } catch (e: any) {
     throw new Error(e?.message ?? 'Network error');

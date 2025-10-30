@@ -49,6 +49,14 @@ export default function BookDetail() {
     <ScrollView contentContainerStyle={styles.container}>
       {book.cover ? <Image style={styles.cover} source={{ uri: book.cover }} /> : <View style={[styles.cover, styles.coverPlaceholder]} />}
       <Text style={styles.title}>{book.name}</Text>
+      {book.rating != null ? (
+        <View style={styles.ratingRow}>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Text key={i} style={[styles.star, i < Math.round(book.rating as number) ? styles.starFilled : styles.starEmpty]}>★</Text>
+          ))}
+          <Text style={styles.ratingText}>{` ${Math.round(Number(book.rating))}/5`}</Text>
+        </View>
+      ) : null}
       {book.author ? <Text style={styles.meta}>Auteur: {book.author}</Text> : null}
       {book.editor ? <Text style={styles.meta}>Éditeur: {book.editor}</Text> : null}
       {book.year ? <Text style={styles.meta}>Année: {String(book.year)}</Text> : null}
@@ -69,4 +77,9 @@ const styles = StyleSheet.create({
   title: { fontSize: 20, fontWeight: '700', marginBottom: 6, textAlign: 'center' },
   meta: { fontSize: 14, color: '#444', marginBottom: 4 },
   actions: { marginTop: 18, width: '100%', maxWidth: 360 },
+  ratingRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
+  star: { fontSize: 18, marginHorizontal: 1 },
+  starFilled: { color: '#f5a623' },
+  starEmpty: { color: '#ddd' },
+  ratingText: { marginLeft: 8, color: '#444', fontSize: 14 },
 });
