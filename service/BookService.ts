@@ -13,6 +13,7 @@ export default async function getBooks(): Promise<Book[]> {
     return data.map((b: any) => ({
       id: Number(b.id),
       name: String(b.name ?? ''),
+      editor: b.editor ?? undefined,
       author: b.author ?? undefined,
       year: b.year != null ? Number(b.year) : undefined,
       cover: b.cover ?? null,
@@ -52,6 +53,44 @@ export async function deleteBook(id: number) {
       throw new Error(err.error || `HTTP ${res.status}`);
     }
     return true;
+  } catch (e: any) {
+    throw new Error(e?.message ?? 'Network error');
+  }
+}
+
+export async function getBook(id: number) {
+  try {
+    const res = await fetch(`http://localhost:3000/books/${id}`);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const b = await res.json();
+    return {
+      id: Number(b.id),
+      name: String(b.name ?? ''),
+      editor: b.editor ?? undefined,
+      author: b.author ?? undefined,
+      year: b.year != null ? Number(b.year) : undefined,
+      cover: b.cover ?? null,
+    } as Book;
+  } catch (e: any) {
+    throw new Error(e?.message ?? 'Network error');
+  }
+}
+
+export async function updateBook(id: number, payload: Partial<Book> & { editor?: string }) {
+  try {
+    const res = await fetch(`http://localhost:3000/books/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data as Book;
   } catch (e: any) {
     throw new Error(e?.message ?? 'Network error');
   }

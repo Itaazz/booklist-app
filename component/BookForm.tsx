@@ -1,22 +1,23 @@
 import React, { useState } from 'react';
-import { Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
 import type { Book } from '@/model/Book';
 
 type BookPayload = {
-  name: string;
-  author: string;
-  editor: string;
-  year: number | string;
+  name?: string;
+  author?: string;
+  editor?: string;
+  year?: number | string;
   cover?: string;
 };
 
 type Props = {
   initial?: Partial<Book & { editor?: string }>;
-  onSubmit: (payload: BookPayload) => Promise<void> | void;
+  onSubmit: (payload: Partial<BookPayload>) => Promise<void> | void;
   submitLabel?: string;
+  allowPartial?: boolean;
 };
 
-export default function BookForm({ initial, onSubmit, submitLabel = 'Enregistrer' }: Props) {
+export default function BookForm({ initial, onSubmit, submitLabel = 'Enregistrer', allowPartial = false }: Props) {
   const [name, setName] = useState(String(initial?.name ?? ''));
   const [author, setAuthor] = useState(String(initial?.author ?? ''));
   const [editor, setEditor] = useState(String(initial?.editor ?? ''));
@@ -24,17 +25,41 @@ export default function BookForm({ initial, onSubmit, submitLabel = 'Enregistrer
   const [cover, setCover] = useState(String(initial?.cover ?? ''));
 
   const handleSubmit = () => {
-    if (!name || !author || !editor || !year) return;
+    if (!allowPartial) {
+      // creation mode - require all fields
+      if (!name || !author || !editor || !year) return;
 
-    const payload: BookPayload = {
-      name,
-      author,
-      editor,
-      year: Number(year),
-      cover: cover || undefined,
-    };
+      const payload: BookPayload = {
+        name,
+        author,
+        editor,
+        year: Number(year),
+        cover: cover || undefined,
+      };
 
-    return onSubmit(payload);
+      return onSubmit(payload);
+    }
+
+    const changed: Partial<BookPayload> = {};
+
+    const initialName = String(initial?.name ?? '');
+    const initialAuthor = String(initial?.author ?? '');
+    const initialEditor = String(initial?.editor ?? '');
+    const initialYear = initial?.year != null ? String(initial.year) : '';
+    const initialCover = String(initial?.cover ?? '');
+
+    if (name !== initialName) changed.name = name;
+    if (author !== initialAuthor) changed.author = author;
+    if (editor !== initialEditor) changed.editor = editor;
+    if (year !== initialYear && year !== '') changed.year = Number(year);
+    if (cover !== initialCover) changed.cover = cover || undefined;
+
+        if (Object.keys(changed).length === 0) {
+            Alert.alert('Aucune modification', "Vous n'avez modifié aucun champ");
+            return;
+        }
+
+    return onSubmit(changed);
   };
 
   return (

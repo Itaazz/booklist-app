@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
-import { Alert } from 'react-native';
+import { FlatList, StyleSheet, View, Alert } from 'react-native';
 import getBooks, { deleteBook } from '@/service/BookService';
 import type { Book } from '@/model/Book';
 import BookCard from '@/component/BookCard';
@@ -19,7 +18,6 @@ export default function BooksScreen() {
       Alert.alert('Succès', 'Livre supprimé');
     } catch (e: any) {
       Alert.alert('Erreur', e?.message ?? 'Erreur suppression');
-      console.error('deleteBook error', e);
     }
   };
 

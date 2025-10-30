@@ -1,6 +1,5 @@
 import { Stack, Link } from 'expo-router';
 import { Text } from 'react-native';
-import { Ionicons } from "@expo/vector-icons";
 
 export default function RootLayout() {
   return (
