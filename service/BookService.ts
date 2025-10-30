@@ -41,3 +41,18 @@ export async function createBook(payload: Partial<Book> & { editor?: string }) {
     throw new Error(e?.message ?? 'Network error');
   }
 }
+
+export async function deleteBook(id: number) {
+  try {
+    const res = await fetch(`http://localhost:3000/books/${id}`, {
+      method: 'DELETE',
+    });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${res.status}`);
+    }
+    return true;
+  } catch (e: any) {
+    throw new Error(e?.message ?? 'Network error');
+  }
+}

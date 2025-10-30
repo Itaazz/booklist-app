@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
-import getBooks from '@/service/BookService';
+import { Alert } from 'react-native';
+import getBooks, { deleteBook } from '@/service/BookService';
 import type { Book } from '@/model/Book';
 import BookCard from '@/component/BookCard';
 
@@ -11,12 +12,23 @@ export default function BooksScreen() {
     getBooks().then((data) => setBooks(data));
   }, []);
 
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteBook(id);
+      setBooks((s) => s.filter((b) => b.id !== id));
+      Alert.alert('Succès', 'Livre supprimé');
+    } catch (e: any) {
+      Alert.alert('Erreur', e?.message ?? 'Erreur suppression');
+      console.error('deleteBook error', e);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <FlatList
         data={books}
         keyExtractor={(item) => String(item.id)}
-        renderItem={({ item }) => <BookCard book={item} />}
+        renderItem={({ item }) => <BookCard book={item} onDelete={handleDelete} />}
         ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
         contentContainerStyle={{ padding: 12 }}
       />
