@@ -21,3 +21,23 @@ export default async function getBooks(): Promise<Book[]> {
     return [];
   }
 }   
+
+export async function createBook(payload: Partial<Book> & { editor?: string }) {
+  try {
+    const res = await fetch('http://localhost:3000/books', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error || `HTTP ${res.status}`);
+    }
+
+    const data = await res.json();
+    return data as Book;
+  } catch (e: any) {
+    throw new Error(e?.message ?? 'Network error');
+  }
+}
