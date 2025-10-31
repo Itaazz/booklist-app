@@ -6,4 +6,6 @@ export type Book = {
   year?: number;
   cover?: string | null;
   rating?: number | null;
+  favorite?: boolean;
+  read?: boolean;
 };

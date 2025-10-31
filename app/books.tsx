@@ -1,41 +1,61 @@
-import React, { useEffect, useState } from 'react';
-import { FlatList, StyleSheet, View, Alert, Pressable } from 'react-native';
+import React, { useEffect } from 'react';
+import { FlatList, StyleSheet, View, Alert, Text, Button } from 'react-native';
 import { useRouter } from 'expo-router';
-import getBooks, { deleteBook } from '@/service/BookService';
-import type { Book } from '@/model/Book';
+import { deleteBook } from '@/service/BookService';
 import BookCard from '@/component/BookCard';
+import { useBooks } from '@/context/BooksContext';
 
 export default function BooksScreen() {
   const router = useRouter();
-  const [books, setBooks] = useState<Book[]>([]);
+  const { books, toggleFavorite, refresh, toggleRead } = useBooks();
 
   useEffect(() => {
-    getBooks().then((data) => setBooks(data));
+    refresh();
   }, []);
+  
 
   const handleDelete = async (id: number) => {
     try {
       await deleteBook(id);
-      setBooks((s) => s.filter((b) => b.id !== id));
+      await refresh();
       Alert.alert('Succès', 'Livre supprimé');
     } catch (e: any) {
       Alert.alert('Erreur', e?.message ?? 'Erreur suppression');
     }
   };
 
+  const handleToggleFavorite = async (id: number, next: boolean) => {
+    return toggleFavorite(id, next);
+  };
+
+  const handleToggleRead = async (id: number, next: boolean) => {
+    return toggleRead(id, next);
+  };
+
   return (
     <View style={styles.container}>
-      <FlatList
-        data={books}
-        keyExtractor={(item) => String(item.id)}
-        renderItem={({ item }) => (
-          <Pressable onPress={() => router.push(`/books/${item.id}`)} android_ripple={{ color: '#eee' }}>
-            <BookCard book={item} onDelete={handleDelete} />
-          </Pressable>
-        )}
-        ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
-        contentContainerStyle={{ padding: 12 }}
-      />
+      {books.length === 0 ? (
+        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+          <Text style={{ fontSize: 16, color: '#666', marginBottom: 12 }}>Aucun livre</Text>
+          <Button title="Ajouter un livre" onPress={() => router.push('/books/create')} />
+        </View>
+      ) : (
+        <FlatList
+          data={books}
+          keyExtractor={(item) => String(item.id)}
+          renderItem={({ item }) => (
+            <BookCard
+              book={item}
+              onDelete={handleDelete}
+              onToggleFavorite={handleToggleFavorite}
+              onToggleRead={handleToggleRead}
+              onPress={() => router.push(`/books/${item.id}`)}
+            />
+          )}
+          ItemSeparatorComponent={() => <View style={{ height: 8 }} />}
+          contentContainerStyle={{ padding: 12 }}
+        />
+      )}
     </View>
   );
 }

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import { Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native';
+import { Alert, Button, ScrollView, StyleSheet, Text, TextInput, View, Pressable } from 'react-native';
 import type { Book } from '@/model/Book';
+import BookRating from '@/component/BookRating';
 
 type BookPayload = {
   name?: string;
   author?: string;
   editor?: string;
   year?: number | string;
+  rating?: number | null;
   cover?: string;
 };
 
@@ -23,10 +25,12 @@ export default function BookForm({ initial, onSubmit, submitLabel = 'Enregistrer
   const [editor, setEditor] = useState(String(initial?.editor ?? ''));
   const [year, setYear] = useState(initial?.year != null ? String(initial.year) : '');
   const [cover, setCover] = useState(String(initial?.cover ?? ''));
+  const [rating, setRating] = useState<number | null>(
+    initial?.rating != null ? Number(initial.rating) : (allowPartial ? null : 0),
+  );
 
   const handleSubmit = () => {
     if (!allowPartial) {
-      // creation mode - require all fields
       if (!name || !author || !editor || !year) return;
 
       const payload: BookPayload = {
@@ -35,6 +39,7 @@ export default function BookForm({ initial, onSubmit, submitLabel = 'Enregistrer
         editor,
         year: Number(year),
         cover: cover || undefined,
+        rating: rating != null ? Number(rating) : 0,
       };
 
       return onSubmit(payload);
@@ -47,12 +52,14 @@ export default function BookForm({ initial, onSubmit, submitLabel = 'Enregistrer
     const initialEditor = String(initial?.editor ?? '');
     const initialYear = initial?.year != null ? String(initial.year) : '';
     const initialCover = String(initial?.cover ?? '');
+  const initialRating = initial?.rating != null ? Number(initial.rating) : null;
 
     if (name !== initialName) changed.name = name;
     if (author !== initialAuthor) changed.author = author;
     if (editor !== initialEditor) changed.editor = editor;
     if (year !== initialYear && year !== '') changed.year = Number(year);
     if (cover !== initialCover) changed.cover = cover || undefined;
+  if (rating !== initialRating) changed.rating = rating != null ? Number(rating) : null;
 
         if (Object.keys(changed).length === 0) {
             Alert.alert('Aucune modification', "Vous n'avez modifié aucun champ");
@@ -79,6 +86,9 @@ export default function BookForm({ initial, onSubmit, submitLabel = 'Enregistrer
       <Text style={styles.label}>Cover (URL)</Text>
       <TextInput style={styles.input} value={cover} onChangeText={setCover} placeholder="https://..." />
 
+      <Text style={styles.label}>Note</Text>
+      <BookRating rating={rating} onChange={setRating} />
+
       <View style={styles.button}>
         <Button title={submitLabel} onPress={handleSubmit} />
       </View>
@@ -91,4 +101,9 @@ const styles = StyleSheet.create({
   label: { marginTop: 12, marginBottom: 6, fontWeight: '600' },
   input: { borderWidth: 1, borderColor: '#ddd', padding: 10, borderRadius: 6 },
   button: { marginTop: 20 },
+  ratingRow: { flexDirection: 'row', alignItems: 'center', marginTop: 8 },
+  star: { fontSize: 18, marginHorizontal: 1 },
+  starFilled: { color: '#f5a623' },
+  starEmpty: { color: '#ddd' },
+  ratingText: { marginLeft: 8, color: '#444', fontSize: 14 },
 });
