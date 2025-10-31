@@ -52,20 +52,20 @@ export default function BookDetail() {
     ]);
   };
 
-  if (!book) return <View style={{ flex: 1 }} />;
+  if (!book) return <View style={{ flex: 1, backgroundColor: colors.background }} />;
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
       {successMsg ? (
         <View style={[styles.toast, { backgroundColor: colors.success }]}>
           <Text style={styles.toastText}>{successMsg}</Text>
         </View>
       ) : null}
-      <ScrollView contentContainerStyle={[styles.container, { backgroundColor: colors.background }]}>
+      <ScrollView contentContainerStyle={[styles.container]}>
         {book.cover ? (
-          <Image style={[styles.cover, { backgroundColor: colors.card }]} source={{ uri: book.cover }} />
+          <Image style={[styles.cover, { backgroundColor: 'transparent' }]} source={{ uri: book.cover }} />
         ) : (
-          <View style={[styles.cover, styles.coverPlaceholder, { backgroundColor: colors.placeholder }]} />
+          <View style={[styles.cover, styles.coverPlaceholder, { backgroundColor: 'transparent' }]} />
         )}
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text style={styles.title}>{book.name}</Text>
@@ -137,7 +137,7 @@ export default function BookDetail() {
 
 const styles = StyleSheet.create({
   container: { padding: 16, alignItems: 'center' },
-  cover: { width: 180, height: 270, borderRadius: 8, backgroundColor: '#eee', marginBottom: 12 },
+  cover: { width: 180, height: 270, borderRadius: 8, backgroundColor: 'transparent', marginBottom: 12 },
   coverPlaceholder: { justifyContent: 'center', alignItems: 'center' },
   title: { fontSize: 20, fontWeight: '700', marginBottom: 6, textAlign: 'center' },
   meta: { fontSize: 14, marginBottom: 4 },

@@ -57,13 +57,22 @@ export default function BooksFilter({
 
         <View style={styles.sortRow}>
           <Text style={{ color: colors.text, marginRight: 8 }}>Trier :</Text>
-          <TouchableOpacity onPress={() => setSortKey('title')} style={[styles.sortButton, sortKey === 'title' && { backgroundColor: colors.primary }]}>
+          <TouchableOpacity
+            onPress={() => setSortKey('title')}
+            style={[styles.sortButton, { backgroundColor: colors.card }, sortKey === 'title' && { backgroundColor: colors.primary }]}
+          >
             <Text style={sortKey === 'title' ? { color: '#fff' } : { color: colors.text }}>Titre</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setSortKey('author')} style={[styles.sortButton, sortKey === 'author' && { backgroundColor: colors.primary }]}>
+          <TouchableOpacity
+            onPress={() => setSortKey('author')}
+            style={[styles.sortButton, { backgroundColor: colors.card }, sortKey === 'author' && { backgroundColor: colors.primary }]}
+          >
             <Text style={sortKey === 'author' ? { color: '#fff' } : { color: colors.text }}>Auteur</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setSortKey('theme')} style={[styles.sortButton, sortKey === 'theme' && { backgroundColor: colors.primary }]}>
+          <TouchableOpacity
+            onPress={() => setSortKey('theme')}
+            style={[styles.sortButton, { backgroundColor: colors.card }, sortKey === 'theme' && { backgroundColor: colors.primary }]}
+          >
             <Text style={sortKey === 'theme' ? { color: '#fff' } : { color: colors.text }}>Thème</Text>
           </TouchableOpacity>
         </View>
