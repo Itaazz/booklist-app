@@ -1,14 +1,21 @@
 import React from 'react';
 import { Image, StyleSheet, Text, View, TouchableOpacity, Alert, Platform } from 'react-native';
+import { MaterialIcons } from '@expo/vector-icons';
 import type { Book } from '@/model/Book';
 import { useRouter } from 'expo-router';
 
 export default function BookCard({
   book,
   onDelete,
+  onToggleFavorite,
+  onToggleRead,
+  onPress,
 }: {
   book: Book;
   onDelete?: (id: number) => void;
+  onToggleFavorite?: (id: number, next: boolean) => void;
+  onToggleRead?: (id: number, next: boolean) => void;
+  onPress?: () => void;
 }) {
   const router = useRouter();
   const confirmDelete = () => {
@@ -28,23 +35,39 @@ export default function BookCard({
 
   return (
     <View style={styles.card}>
-      <View style={styles.leftCol}>
-        {book.cover ? (
-          <Image style={styles.image} source={{ uri: book.cover }} />
-        ) : (
-          <View style={[styles.image, styles.imagePlaceholder]} />
-        )}
-      </View>
+      <TouchableOpacity onPress={onPress} style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
+        <View style={styles.leftCol}>
+          {book.cover ? (
+            <Image style={styles.image} source={{ uri: book.cover }} />
+          ) : (
+            <View style={[styles.image, styles.imagePlaceholder]} />
+          )}
+        </View>
 
-      <View style={styles.txtInCard}>
-        <Text style={styles.title}>{book.name}</Text>
-        <Text style={styles.idText}>ID: {book.id}</Text>
-        {book.author ? <Text style={styles.author}>Auteur : {book.author}</Text> : null}
-        {book.editor ? <Text style={styles.editor}>Editeur : {book.editor}</Text> : null}
-        {book.year ? <Text style={styles.year}>Année : {String(book.year)}</Text> : null}
-      </View>
+        <View style={styles.txtInCard}>
+          <Text style={styles.title}>{book.name}</Text>
+          <Text style={styles.idText}>ID: {book.id}</Text>
+          {book.author ? <Text style={styles.author}>Auteur : {book.author}</Text> : null}
+          {book.editor ? <Text style={styles.editor}>Editeur : {book.editor}</Text> : null}
+          {book.year ? <Text style={styles.year}>Année : {String(book.year)}</Text> : null}
+        </View>
+      </TouchableOpacity>
 
       <View style={styles.rightCol}>
+        <TouchableOpacity
+          onPress={() => onToggleRead ? onToggleRead(book.id, !Boolean((book as any).read)) : null}
+          style={styles.menuButton}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+          <MaterialIcons name={(book as any).read ? 'check-circle' : 'check-circle-outline'} size={20} color={(book as any).read ? '#2ecc71' : '#666'} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => onToggleFavorite ? onToggleFavorite(book.id, !Boolean((book as any).favorite)) : null}
+          style={styles.menuButton}
+          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
+          <MaterialIcons name={(book as any).favorite ? 'favorite' : 'favorite-border'} size={20} color={(book as any).favorite ? '#e74c3c' : '#666'} />
+        </TouchableOpacity>
+
         <TouchableOpacity
           onPress={() => router.push(`/books/${book.id}/edit`)}
           style={styles.editButton}

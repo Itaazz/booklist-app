@@ -1,10 +1,12 @@
 import { Stack, Link } from 'expo-router';
 import { Text } from 'react-native';
+import { BooksProvider } from '@/context/BooksContext';
 
 export default function RootLayout() {
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ title: 'Bibliothèques', headerShown: true }} />
+    <BooksProvider>
+      <Stack>
+        <Stack.Screen name="index" options={{ title: 'Bibliothèques', headerShown: true }} />
         <Stack.Screen
           name="books"
           options={{
@@ -17,6 +19,7 @@ export default function RootLayout() {
             ),
           }}
         />
-    </Stack>
+      </Stack>
+    </BooksProvider>
   );
 };
