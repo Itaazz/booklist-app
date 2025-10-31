@@ -1,11 +1,14 @@
 import { Stack, Link } from 'expo-router';
-import { Text } from 'react-native';
+import { Text, View } from 'react-native';
 import { BooksProvider } from '@/context/BooksContext';
+import { ThemeProvider } from '@/context/ThemeContext';
+import ThemeToggle from '@/component/ThemeToggle';
 
 export default function RootLayout() {
   return (
-    <BooksProvider>
-      <Stack>
+    <ThemeProvider>
+      <BooksProvider>
+        <Stack>
         <Stack.Screen name="index" options={{ title: 'Bibliothèques', headerShown: true }} />
         <Stack.Screen
           name="books"
@@ -13,13 +16,17 @@ export default function RootLayout() {
             title: 'Livres',
             headerShown: true,
             headerRight: () => (
-              <Link href="/books/create">
-                <Text style={{ marginRight: 12, color: '#0a84ff', fontWeight: '600' }}>Ajouter</Text>
-              </Link>
+              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                <ThemeToggle />
+                <Link href="/books/create">
+                  <Text style={{ marginRight: 12, color: '#0a84ff', fontWeight: '600' }}>Ajouter</Text>
+                </Link>
+              </View>
             ),
           }}
         />
-      </Stack>
-    </BooksProvider>
+        </Stack>
+      </BooksProvider>
+    </ThemeProvider>
   );
 };
