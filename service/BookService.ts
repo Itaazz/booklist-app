@@ -1,8 +1,9 @@
 import type { Book } from '@/model/Book';
+import { BASE } from './config';
 
 export default async function getBooks(): Promise<Book[]> {
   try {
-    const res = await fetch('http://localhost:3000/books');
+  const res = await fetch(`${BASE}/books`);
     if (!res.ok) {
       return [];
     }
@@ -35,7 +36,7 @@ export async function createBook(payload: Partial<Book> & { editor?: string }) {
       read: payload.read != null ? Boolean(payload.read) : false,
     } as any;
 
-    const res = await fetch('http://localhost:3000/books', {
+  const res = await fetch(`${BASE}/books`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(body),
@@ -55,7 +56,7 @@ export async function createBook(payload: Partial<Book> & { editor?: string }) {
 
 export async function deleteBook(id: number) {
   try {
-    const res = await fetch(`http://localhost:3000/books/${id}`, {
+  const res = await fetch(`${BASE}/books/${id}`, {
       method: 'DELETE',
     });
     if (!res.ok) {
@@ -70,7 +71,7 @@ export async function deleteBook(id: number) {
 
 export async function getBook(id: number) {
   try {
-    const res = await fetch(`http://localhost:3000/books/${id}`);
+  const res = await fetch(`${BASE}/books/${id}`);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const b = await res.json();
     return {
@@ -91,7 +92,7 @@ export async function getBook(id: number) {
 
 export async function updateBook(id: number, payload: Partial<Book> & { editor?: string }) {
   try {
-    const res = await fetch(`http://localhost:3000/books/${id}`, {
+  const res = await fetch(`${BASE}/books/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
@@ -111,7 +112,7 @@ export async function updateBook(id: number, payload: Partial<Book> & { editor?:
 
 export async function createNote(bookId: number, content: string) {
   try {
-    const res = await fetch(`http://localhost:3000/books/${bookId}/notes`, {
+  const res = await fetch(`${BASE}/books/${bookId}/notes`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ content }),
@@ -129,7 +130,7 @@ export async function createNote(bookId: number, content: string) {
 
 export async function getNotes(bookId: number) {
   try {
-    const res = await fetch(`http://localhost:3000/books/${bookId}/notes`);
+  const res = await fetch(`${BASE}/books/${bookId}/notes`);
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
       throw new Error(err.error || `HTTP ${res.status}`);
