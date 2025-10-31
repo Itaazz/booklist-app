@@ -28,8 +28,8 @@ export default function EditBook() {
   const handleSubmit = async (payload: any) => {
     try {
       const updated = await updateBook(id, payload);
-      router.push('/books');
-      Alert.alert('Succès', `Livre mis à jour (id: ${updated.id})`);
+  router.push('/books');
+  Alert.alert('Succès', 'Livre mis à jour');
     } catch (e: any) {
       Alert.alert('Erreur', e?.message ?? 'Erreur réseau');
     }

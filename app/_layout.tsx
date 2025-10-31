@@ -40,6 +40,16 @@ function ThemedStack() {
           headerRight: () => <HeaderRight />,
         }}
       />
+        <Stack.Screen
+        name="books/create"
+        options={{
+          title: 'Ajouter un livre',
+          headerShown: true,
+          headerStyle: { backgroundColor: colors.card },
+          headerTintColor: colors.text,
+          headerRight: () => <HeaderRight />,
+        }}
+      />
       <Stack.Screen
         name="books/[id]/index"
         options={{
@@ -58,7 +68,7 @@ function ThemedStack() {
           headerTintColor: colors.text,
         }}
       />
-            <Stack.Screen
+        <Stack.Screen
         name="books/[id]/edit"
         options={{
           title: 'Modification',

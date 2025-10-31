@@ -51,7 +51,6 @@ export default function BookCard({
 
         <View style={styles.txtInCard}>
           <Text style={styles.title}>{book.name}</Text>
-          <Text style={styles.idText}>ID: {book.id}</Text>
           {book.author ? <Text style={styles.author}>Auteur : {book.author}</Text> : null}
           {book.editor ? <Text style={styles.editor}>Editeur : {book.editor}</Text> : null}
           {book.year ? <Text style={styles.year}>Année : {String(book.year)}</Text> : null}
@@ -169,11 +168,6 @@ const useStyles = createThemedStyles((colors: any) => ({
     fontWeight: '600',
     marginBottom: 6,
   },
-  idText: {
-    marginTop: 4,
-    color: colors.text,
-    fontSize: 12,
-    opacity: 0.7,
-  },
+  // idText removed — IDs are not shown in the UI anymore (only used internally)
   iconColor: { color: colors.text },
 }));
