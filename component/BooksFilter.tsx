@@ -1,5 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { View, TextInput, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { useTheme } from '@/context/ThemeContext';
 import type { Book } from '@/model/Book';
 
 export default function BooksFilter({
@@ -9,6 +10,7 @@ export default function BooksFilter({
   books: Book[];
   children: (filtered: Book[]) => React.ReactNode;
 }) {
+  const { colors } = useTheme();
   const [query, setQuery] = useState('');
   const [filter, setFilter] = useState<'all' | 'read' | 'unread' | 'favorite'>('all');
   const [sortKey, setSortKey] = useState<'title' | 'author' | 'theme'>('title');
@@ -34,35 +36,35 @@ export default function BooksFilter({
   }, [books, query, filter, sortKey]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.headerArea}>
-        <TextInput placeholder="Recherche par titre ou auteur..." value={query} onChangeText={setQuery} style={styles.searchInput} />
+    <View style={[styles.container, { backgroundColor: colors.background }] }>
+      <View style={[styles.headerArea, { backgroundColor: colors.card }] }>
+        <TextInput placeholder="Recherche par titre ou auteur..." value={query} onChangeText={setQuery} style={[styles.searchInput, { borderColor: colors.border, color: colors.text, backgroundColor: colors.card }]} placeholderTextColor={colors.muted} />
 
         <View style={styles.chipsRow}>
-          <TouchableOpacity onPress={() => setFilter('all')} style={[styles.chip, filter === 'all' && styles.chipActive]}>
-            <Text style={[styles.chipText, filter === 'all' && styles.chipTextActive]}>Tous</Text>
+          <TouchableOpacity onPress={() => setFilter('all')} style={[styles.chip, { backgroundColor: filter === 'all' ? colors.primary : colors.card }]}>
+            <Text style={[styles.chipText, { color: filter === 'all' ? '#fff' : colors.text }]}>Tous</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setFilter('read')} style={[styles.chip, filter === 'read' && styles.chipActive]}>
-            <Text style={[styles.chipText, filter === 'read' && styles.chipTextActive]}>Lus</Text>
+          <TouchableOpacity onPress={() => setFilter('read')} style={[styles.chip, { backgroundColor: filter === 'read' ? colors.primary : colors.card }]}>
+            <Text style={[styles.chipText, { color: filter === 'read' ? '#fff' : colors.text }]}>Lus</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setFilter('unread')} style={[styles.chip, filter === 'unread' && styles.chipActive]}>
-            <Text style={[styles.chipText, filter === 'unread' && styles.chipTextActive]}>Non lus</Text>
+          <TouchableOpacity onPress={() => setFilter('unread')} style={[styles.chip, { backgroundColor: filter === 'unread' ? colors.primary : colors.card }]}>
+            <Text style={[styles.chipText, { color: filter === 'unread' ? '#fff' : colors.text }]}>Non lus</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setFilter('favorite')} style={[styles.chip, filter === 'favorite' && styles.chipActive]}>
-            <Text style={[styles.chipText, filter === 'favorite' && styles.chipTextActive]}>Favoris</Text>
+          <TouchableOpacity onPress={() => setFilter('favorite')} style={[styles.chip, { backgroundColor: filter === 'favorite' ? colors.primary : colors.card }]}>
+            <Text style={[styles.chipText, { color: filter === 'favorite' ? '#fff' : colors.text }]}>Favoris</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.sortRow}>
-          <Text style={{ color: '#444', marginRight: 8 }}>Trier :</Text>
-          <TouchableOpacity onPress={() => setSortKey('title')} style={[styles.sortButton, sortKey === 'title' && styles.sortActive]}>
-            <Text style={sortKey === 'title' ? styles.sortTextActive : styles.sortText}>Titre</Text>
+          <Text style={{ color: colors.text, marginRight: 8 }}>Trier :</Text>
+          <TouchableOpacity onPress={() => setSortKey('title')} style={[styles.sortButton, sortKey === 'title' && { backgroundColor: colors.primary }]}>
+            <Text style={sortKey === 'title' ? { color: '#fff' } : { color: colors.text }}>Titre</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setSortKey('author')} style={[styles.sortButton, sortKey === 'author' && styles.sortActive]}>
-            <Text style={sortKey === 'author' ? styles.sortTextActive : styles.sortText}>Auteur</Text>
+          <TouchableOpacity onPress={() => setSortKey('author')} style={[styles.sortButton, sortKey === 'author' && { backgroundColor: colors.primary }]}>
+            <Text style={sortKey === 'author' ? { color: '#fff' } : { color: colors.text }}>Auteur</Text>
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setSortKey('theme')} style={[styles.sortButton, sortKey === 'theme' && styles.sortActive]}>
-            <Text style={sortKey === 'theme' ? styles.sortTextActive : styles.sortText}>Thème</Text>
+          <TouchableOpacity onPress={() => setSortKey('theme')} style={[styles.sortButton, sortKey === 'theme' && { backgroundColor: colors.primary }]}>
+            <Text style={sortKey === 'theme' ? { color: '#fff' } : { color: colors.text }}>Thème</Text>
           </TouchableOpacity>
         </View>
       </View>

@@ -1,8 +1,10 @@
 import React from 'react';
-import { Image, StyleSheet, Text, View, TouchableOpacity, Alert, Platform } from 'react-native';
+import { Image, Text, View, TouchableOpacity, Alert, Platform } from 'react-native';
+import { useTheme } from '@/context/ThemeContext';
 import { MaterialIcons } from '@expo/vector-icons';
 import type { Book } from '@/model/Book';
 import { useRouter } from 'expo-router';
+import createThemedStyles from './useThemedStyles';
 
 export default function BookCard({
   book,
@@ -33,6 +35,9 @@ export default function BookCard({
     ]);
   };
 
+  const styles = useStyles() as any;
+  const { colors } = useTheme();
+
   return (
     <View style={styles.card}>
       <TouchableOpacity onPress={onPress} style={{ flexDirection: 'row', alignItems: 'center', flex: 1 }}>
@@ -58,14 +63,14 @@ export default function BookCard({
           onPress={() => onToggleRead ? onToggleRead(book.id, !Boolean((book as any).read)) : null}
           style={styles.menuButton}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-          <MaterialIcons name={(book as any).read ? 'check-circle' : 'check-circle-outline'} size={20} color={(book as any).read ? '#2ecc71' : '#666'} />
+          <MaterialIcons name={(book as any).read ? 'check-circle' : 'check-circle-outline'} size={20} color={(book as any).read ? colors.success : colors.muted} />
         </TouchableOpacity>
 
         <TouchableOpacity
           onPress={() => onToggleFavorite ? onToggleFavorite(book.id, !Boolean((book as any).favorite)) : null}
           style={styles.menuButton}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-          <MaterialIcons name={(book as any).favorite ? 'favorite' : 'favorite-border'} size={20} color={(book as any).favorite ? '#e74c3c' : '#666'} />
+          <MaterialIcons name={(book as any).favorite ? 'favorite' : 'favorite-border'} size={20} color={(book as any).favorite ? colors.danger : colors.muted} />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -86,13 +91,13 @@ export default function BookCard({
   );
 }
 
-const styles = StyleSheet.create({
+const useStyles = createThemedStyles((colors: any) => ({
   card: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10,
     borderRadius: 8,
-    backgroundColor: '#fff',
+    backgroundColor: colors.card,
     shadowColor: '#000',
     shadowOpacity: 0.06,
     shadowRadius: 6,
@@ -105,26 +110,29 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 16,
     fontWeight: '600',
+    color: colors.text,
   },
   author: {
     marginTop: 4,
-    color: '#444',
+    color: colors.text,
   },
   editor: {
     marginTop: 2,
-    color: '#666',
+    color: colors.text,
     fontSize: 13,
+    opacity: 0.8,
   },
   year: {
     marginTop: 6,
-    color: '#666',
+    color: colors.text,
     fontSize: 12,
+    opacity: 0.8,
   },
   image: {
     width: 72,
     height: 108,
     borderRadius: 6,
-    backgroundColor: '#eee',
+    backgroundColor: colors.placeholder,
   },
   imagePlaceholder: {
     justifyContent: 'center',
@@ -147,24 +155,25 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 20,
-    color: '#666',
+    color: colors.text,
     lineHeight: 20,
   },
   deleteText: {
     fontSize: 14,
-    color: '#d00',
+    color: colors.danger,
     fontWeight: '600',
   },
   editText: {
     fontSize: 14,
-    color: '#0666cc',
+    color: colors.primary,
     fontWeight: '600',
     marginBottom: 6,
   },
   idText: {
     marginTop: 4,
-    color: '#888',
+    color: colors.text,
     fontSize: 12,
+    opacity: 0.7,
   },
-  
-});
+  iconColor: { color: colors.text },
+}));

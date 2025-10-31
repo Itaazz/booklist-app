@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, Button, Alert, ScrollView, Platform } from 'react-native';
+import { useTheme } from '@/context/ThemeContext';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { getBook, deleteBook, updateBook, createNote } from '@/service/BookService';
 import BookRating from '@/component/BookRating';
@@ -27,6 +28,7 @@ export default function BookDetail() {
     };
   }, [id]);
   const { updateLocal, refresh } = useBooks();
+  const { colors } = useTheme();
 
   const handleDelete = () => {
     if (Platform.OS === 'web') {
@@ -55,18 +57,22 @@ export default function BookDetail() {
   return (
     <View style={{ flex: 1 }}>
       {successMsg ? (
-        <View style={styles.toast}>
+        <View style={[styles.toast, { backgroundColor: colors.success }]}>
           <Text style={styles.toastText}>{successMsg}</Text>
         </View>
       ) : null}
-      <ScrollView contentContainerStyle={styles.container}>
-        {book.cover ? <Image style={styles.cover} source={{ uri: book.cover }} /> : <View style={[styles.cover, styles.coverPlaceholder]} />}
+      <ScrollView contentContainerStyle={[styles.container, { backgroundColor: colors.background }]}>
+        {book.cover ? (
+          <Image style={[styles.cover, { backgroundColor: colors.card }]} source={{ uri: book.cover }} />
+        ) : (
+          <View style={[styles.cover, styles.coverPlaceholder, { backgroundColor: colors.placeholder }]} />
+        )}
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text style={styles.title}>{book.name}</Text>
         <MaterialIcons
           name={book.favorite ? 'favorite' : 'favorite-border'}
           size={22}
-          color={book.favorite ? '#e74c3c' : '#666'}
+          color={book.favorite ? colors.danger : colors.muted}
           style={{ marginLeft: 8 }}
           onPress={async () => {
             try {
@@ -81,7 +87,7 @@ export default function BookDetail() {
         <MaterialIcons
           name={book.read ? 'check-circle' : 'check-circle-outline'}
           size={22}
-          color={book.read ? '#2ecc71' : '#666'}
+          color={book.read ? colors.success : colors.muted}
           style={{ marginLeft: 8 }}
           onPress={async () => {
             try {
@@ -113,16 +119,16 @@ export default function BookDetail() {
           }
         }}
       />
-      {book.author ? <Text style={styles.meta}>Auteur: {book.author}</Text> : null}
-      {book.editor ? <Text style={styles.meta}>Éditeur: {book.editor}</Text> : null}
-      {book.year ? <Text style={styles.meta}>Année: {String(book.year)}</Text> : null}
+  {book.author ? <Text style={[styles.meta, { color: colors.text }]}>Auteur: {book.author}</Text> : null}
+  {book.editor ? <Text style={[styles.meta, { color: colors.text }]}>Éditeur: {book.editor}</Text> : null}
+  {book.year ? <Text style={[styles.meta, { color: colors.text }]}>Année: {String(book.year)}</Text> : null}
 
       <View style={styles.actions}> 
         <Button title="Avis" onPress={() => router.push(`/books/${id}/notes`)} />
         <View style={{ height: 8 }} />
         <Button title="Modifier" onPress={() => router.push(`/books/${id}/edit`)} />
         <View style={{ height: 8 }} />
-        <Button color="#d00" title="Supprimer" onPress={handleDelete} />
+        <Button color={colors.danger} title="Supprimer" onPress={handleDelete} />
       </View>
     </ScrollView>
     </View>
@@ -130,17 +136,17 @@ export default function BookDetail() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 16, backgroundColor: '#fff', alignItems: 'center' },
+  container: { padding: 16, alignItems: 'center' },
   cover: { width: 180, height: 270, borderRadius: 8, backgroundColor: '#eee', marginBottom: 12 },
   coverPlaceholder: { justifyContent: 'center', alignItems: 'center' },
   title: { fontSize: 20, fontWeight: '700', marginBottom: 6, textAlign: 'center' },
-  meta: { fontSize: 14, color: '#444', marginBottom: 4 },
+  meta: { fontSize: 14, marginBottom: 4 },
   actions: { marginTop: 18, width: '100%', maxWidth: 360 },
   ratingRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
   star: { fontSize: 18, marginHorizontal: 1 },
   starFilled: { color: '#f5a623' },
   starEmpty: { color: '#ddd' },
-  ratingText: { marginLeft: 8, color: '#444', fontSize: 14 },
+  ratingText: { marginLeft: 8, fontSize: 14 },
   toast: {
     position: 'absolute',
     top: 12,
