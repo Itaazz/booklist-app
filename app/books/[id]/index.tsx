@@ -62,27 +62,28 @@ export default function BookDetail() {
         </View>
       ) : null}
       <ScrollView contentContainerStyle={[styles.container]}>
-        {book.cover ? (
-          <Image style={[styles.cover, { backgroundColor: 'transparent' }]} source={{ uri: book.cover }} />
-        ) : (
-          <View style={[styles.cover, styles.coverPlaceholder, { backgroundColor: 'transparent' }]} />
-        )}
+          {book.cover ? (
+            <Image style={[styles.cover, { backgroundColor: 'transparent' }]} source={{ uri: book.cover }} />
+          ) : (
+            <View style={[styles.cover, styles.coverPlaceholder, { backgroundColor: 'transparent' }]} />
+          )}
       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Text style={styles.title}>{book.name}</Text>
+        <Text style={[styles.title, { color: colors.text }]}>{book.name}</Text>
         <MaterialIcons
           name={book.favorite ? 'favorite' : 'favorite-border'}
           size={22}
           color={book.favorite ? colors.danger : colors.muted}
           style={{ marginLeft: 8 }}
-          onPress={async () => {
-            try {
-              const updated = await updateBook(id, { favorite: !book.favorite });
-              setBook(updated);
-              updateLocal(updated);
-            } catch (e: any) {
-              Alert.alert('Erreur', e?.message ?? 'Impossible de modifier le favori');
-            }
-          }}
+            onPress={async () => {
+              try {
+                const updated = await updateBook(id, { favorite: !book.favorite });
+                setBook(updated);
+                updateLocal(updated);
+                Alert.alert('Succès', updated.favorite ? 'Ajouté aux favoris' : 'Retiré des favoris');
+              } catch (e: any) {
+                Alert.alert('Erreur', e?.message ?? 'Impossible de modifier le favori');
+              }
+            }}
         />
         <MaterialIcons
           name={book.read ? 'check-circle' : 'check-circle-outline'}
@@ -94,6 +95,7 @@ export default function BookDetail() {
               const updated = await updateBook(id, { read: !book.read });
               setBook(updated);
               updateLocal(updated);
+              Alert.alert('Succès', updated.read ? 'Marqué comme lu' : 'Marqué comme non lu');
             } catch (e: any) {
               Alert.alert('Erreur', e?.message ?? 'Impossible de modifier le statut lu');
             }
@@ -139,6 +141,8 @@ const styles = StyleSheet.create({
   container: { padding: 16, alignItems: 'center' },
   cover: { width: 180, height: 270, borderRadius: 8, backgroundColor: 'transparent', marginBottom: 12 },
   coverPlaceholder: { justifyContent: 'center', alignItems: 'center' },
+  coverContainer: { width: '100%', alignItems: 'center', position: 'relative' },
+  favoriteButton: { position: 'absolute', top: 12, right: 12, backgroundColor: 'rgba(0,0,0,0.4)', borderRadius: 18, padding: 6 },
   title: { fontSize: 20, fontWeight: '700', marginBottom: 6, textAlign: 'center' },
   meta: { fontSize: 14, marginBottom: 4 },
   actions: { marginTop: 18, width: '100%', maxWidth: 360 },

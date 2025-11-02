@@ -53,7 +53,7 @@ function ThemedStack() {
       <Stack.Screen
         name="books/[id]/index"
         options={{
-          headerTitle: () => <BookHeaderTitle />,
+          title: 'Détail',
           headerShown: true,
           headerStyle: { backgroundColor: colors.card },
           headerTintColor: colors.text,

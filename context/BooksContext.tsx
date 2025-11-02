@@ -33,6 +33,7 @@ export function BooksProvider({ children }: { children: React.ReactNode }) {
     try {
       const updated = await apiUpdateBook(id, { favorite: next } as any);
       setBooks((s) => s.map((b) => (b.id === id ? { ...b, ...updated } : b)));
+      Alert.alert('Succès', next ? 'Ajouté aux favoris' : 'Retiré des favoris');
     } catch (e: any) {
       setBooks((s) => s.map((b) => (b.id === id ? { ...b, favorite: !next } : b)));
       Alert.alert('Erreur', e?.message ?? 'Impossible de modifier le favori');
@@ -44,6 +45,7 @@ export function BooksProvider({ children }: { children: React.ReactNode }) {
     try {
       const updated = await apiUpdateBook(id, { read: next } as any);
       setBooks((s) => s.map((b) => (b.id === id ? { ...b, ...updated } : b)));
+      Alert.alert('Succès', next ? 'Marqué comme lu' : 'Marqué comme non lu');
     } catch (e: any) {
       setBooks((s) => s.map((b) => (b.id === id ? { ...b, read: !next } : b)));
       Alert.alert('Erreur', e?.message ?? 'Impossible de modifier le statut lu');
