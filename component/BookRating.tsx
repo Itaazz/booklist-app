@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { useTheme } from '@/context/ThemeContext';
 import { MaterialIcons } from '@expo/vector-icons';
 
 type Props = {
@@ -11,6 +12,7 @@ type Props = {
 
 export default function BookRating({ rating = null, onChange, disabled = false, size = 24 }: Props) {
   const interactive = typeof onChange === 'function' && !disabled;
+  const { colors } = useTheme();
 
   return (
     <View style={styles.row}>
@@ -18,7 +20,7 @@ export default function BookRating({ rating = null, onChange, disabled = false, 
         const i = idx + 1;
         const display = rating != null ? Math.round(Number(rating)) : 0;
         const iconName = display >= i ? 'star' : 'star-border';
-        const color = display >= i ? '#f5a623' : '#ddd';
+        const color = display >= i ? colors.gold : colors.placeholder;
 
         return (
           <Pressable
@@ -32,7 +34,7 @@ export default function BookRating({ rating = null, onChange, disabled = false, 
         );
       })}
 
-      <Text style={[styles.text, { marginLeft: 8 }]}>{rating != null ? String(Math.round(Number(rating))) : '—'}/5</Text>
+      <Text style={[styles.text, { marginLeft: 8, color: colors.text }]}>{rating != null ? String(Math.round(Number(rating))) : '—'}/5</Text>
     </View>
   );
 }

@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { FlatList, StyleSheet, View, Alert, Text, Button } from 'react-native';
+import { createThemedStyles } from '@/component/useThemedStyles';
 import { useRouter } from 'expo-router';
 import { deleteBook } from '@/service/BookService';
 import BookCard from '@/component/BookCard';
@@ -9,6 +10,7 @@ import BooksFilter from '@/component/BooksFilter';
 export default function BooksScreen() {
   const router = useRouter();
   const { books, toggleFavorite, refresh, toggleRead } = useBooks();
+  const styles = useStyles();
   useEffect(() => {
     refresh();
   }, []);
@@ -38,8 +40,8 @@ export default function BooksScreen() {
         {(list) =>
           list.length === 0 ? (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-              <Text style={{ fontSize: 16, color: '#666', marginBottom: 12 }}>Aucun livre correspondant</Text>
-              <Button title="Ajouter un livre" onPress={() => router.push('/books/create')} />
+              <Text style={{ fontSize: 16, color: styles.title.color, marginBottom: 12 }}>Aucun livre correspondant</Text>
+              <Button color={styles.chipActive.backgroundColor as any} title="Ajouter un livre" onPress={() => router.push('/books/create')} />
             </View>
           ) : (
             <FlatList
@@ -64,26 +66,26 @@ export default function BooksScreen() {
   );
 } 
 
-const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#fff' },
-  headerArea: { padding: 12, backgroundColor: '#fff' },
-  searchInput: { borderWidth: 1, borderColor: '#eee', padding: 8, borderRadius: 8, marginBottom: 8 },
+const useStyles = createThemedStyles((colors: any) => ({
+  container: { flex: 1, backgroundColor: colors.background },
+  headerArea: { padding: 12, backgroundColor: colors.background },
+  searchInput: { borderWidth: 1, borderColor: colors.border, padding: 8, borderRadius: 8, marginBottom: 8, color: colors.text, backgroundColor: colors.card },
   chipsRow: { flexDirection: 'row', gap: 8, marginBottom: 8 },
-  chip: { paddingVertical: 6, paddingHorizontal: 10, borderRadius: 16, backgroundColor: '#f5f5f5', marginRight: 8 },
-  chipActive: { backgroundColor: '#0666cc' },
-  chipText: { color: '#444' },
+  chip: { paddingVertical: 6, paddingHorizontal: 10, borderRadius: 16, backgroundColor: colors.card, marginRight: 8 },
+  chipActive: { backgroundColor: colors.primary },
+  chipText: { color: colors.text },
   chipTextActive: { color: '#fff' },
   sortRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
-  sortButton: { paddingVertical: 6, paddingHorizontal: 8, borderRadius: 6, marginRight: 8, backgroundColor: '#f5f5f5' },
-  sortActive: { backgroundColor: '#0666cc' },
-  sortText: { color: '#444' },
+  sortButton: { paddingVertical: 6, paddingHorizontal: 8, borderRadius: 6, marginRight: 8, backgroundColor: colors.card },
+  sortActive: { backgroundColor: colors.primary },
+  sortText: { color: colors.text },
   sortTextActive: { color: '#fff' },
   center: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   item: { flexDirection: 'row', gap: 12, alignItems: 'center', paddingVertical: 8 },
-  cover: { width: 70, height: 100, borderRadius: 5, backgroundColor: '#ddd' },
+  cover: { width: 70, height: 100, borderRadius: 5, backgroundColor: colors.placeholder },
   coverPlaceholder: { justifyContent: 'center', alignItems: 'center' },
   meta: { flex: 1 },
-  title: { fontSize: 16, fontWeight: '600' },
-  author: { marginTop: 4, color: '#555' },
-  year: { marginTop: 6, color: '#888' },
-});
+  title: { fontSize: 16, fontWeight: '600', color: colors.text },
+  author: { marginTop: 4, color: colors.muted },
+  year: { marginTop: 6, color: colors.muted },
+}));

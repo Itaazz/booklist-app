@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TextInput, Button, Alert } from 'react-native';
+import { useTheme } from '@/context/ThemeContext';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { getNotes, createNote, getBook } from '@/service/BookService';
 
@@ -13,6 +14,7 @@ export default function BookNotes() {
   const [newNote, setNewNote] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [title, setTitle] = useState<string | null>(null);
+  const { colors } = useTheme();
 
   useEffect(() => {
     let mounted = true;
@@ -53,20 +55,20 @@ export default function BookNotes() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>{title ? `Avis — ${title}` : 'Avis'}</Text>
+    <View style={[styles.container, { backgroundColor: colors.background }]}> 
+      <Text style={[styles.header, { color: colors.text }]}>{title ? `Avis — ${title}` : 'Avis'}</Text>
       <ScrollView style={{ flex: 1, width: '100%' }} contentContainerStyle={{ padding: 12 }}>
         {loading ? (
-          <Text style={styles.empty}>Chargement des notes…</Text>
+          <Text style={[styles.empty, { color: colors.muted }]}>Chargement des notes…</Text>
         ) : notes.length === 0 ? (
           <View style={{ alignItems: 'center' }}>
-            <Text style={styles.empty}>Aucune note</Text>
+            <Text style={[styles.empty, { color: colors.muted }]}>Aucune note</Text>
           </View>
         ) : (
           notes.map((n) => (
-            <View key={String(n.id)} style={styles.noteRow}>
-              <Text style={styles.noteText}>{n.content}</Text>
-              {n.dateISO ? <Text style={styles.noteDate}>{new Date(n.dateISO).toLocaleString()}</Text> : null}
+            <View key={String(n.id)} style={[styles.noteRow, { borderBottomColor: colors.border }]}> 
+              <Text style={[styles.noteText, { color: colors.text }]}>{n.content}</Text>
+              {n.dateISO ? <Text style={[styles.noteDate, { color: colors.muted }]}>{new Date(n.dateISO).toLocaleString()}</Text> : null}
             </View>
           ))
         )}
@@ -77,10 +79,10 @@ export default function BookNotes() {
           placeholder="Écrire un avis..."
           value={newNote}
           onChangeText={setNewNote}
-          style={styles.input}
+          style={[styles.input, { borderColor: colors.border, backgroundColor: colors.card, color: colors.text }]}
           multiline
         />
-        <Button title={submitting ? 'Envoi...' : 'Ajouter'} onPress={handleAdd} disabled={submitting} />
+        <Button color={colors.primary} title={submitting ? 'Envoi...' : 'Ajouter'} onPress={handleAdd} disabled={submitting} />
       </View>
     </View>
   );

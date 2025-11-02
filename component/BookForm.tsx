@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Alert, Button, ScrollView, StyleSheet, Text, TextInput, View, Image, TouchableOpacity, Platform } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import pickImageFromLibrary from '@/component/ImagePickerHelper';
+import { useTheme } from '@/context/ThemeContext';
 import type { Book } from '@/model/Book';
 import BookRating from '@/component/BookRating';
 
@@ -22,6 +23,7 @@ type Props = {
 };
 
 export default function BookForm({ initial, onSubmit, submitLabel = 'Enregistrer', allowPartial = false }: Props) {
+  const { colors } = useTheme();
   const [name, setName] = useState(String(initial?.name ?? ''));
   const [author, setAuthor] = useState(String(initial?.author ?? ''));
   const [editor, setEditor] = useState(String(initial?.editor ?? ''));
@@ -107,10 +109,10 @@ export default function BookForm({ initial, onSubmit, submitLabel = 'Enregistrer
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={[styles.container, { backgroundColor: colors.background }]}>
       <Text style={styles.label}>Titre</Text>
       <TextInput
-        style={[styles.input, errors.name ? { borderColor: '#d00' } : null]}
+        style={[styles.input, { borderColor: errors.name ? colors.danger : colors.border, color: colors.text }, errors.name ? { borderColor: colors.danger } : null]}
         value={name}
         onChangeText={(v) => {
           setName(v);
@@ -118,11 +120,11 @@ export default function BookForm({ initial, onSubmit, submitLabel = 'Enregistrer
         }}
         placeholder="Nom du livre"
       />
-      {errors.name ? <Text style={styles.fieldError}>{errors.name}</Text> : null}
+      {errors.name ? <Text style={[styles.fieldError, { color: colors.danger }]}>{errors.name}</Text> : null}
 
-      <Text style={styles.label}>Auteur</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Auteur</Text>
       <TextInput
-        style={[styles.input, errors.author ? { borderColor: '#d00' } : null]}
+        style={[styles.input, { borderColor: errors.author ? colors.danger : colors.border, color: colors.text }, errors.author ? { borderColor: colors.danger } : null]}
         value={author}
         onChangeText={(v) => {
           setAuthor(v);
@@ -130,11 +132,11 @@ export default function BookForm({ initial, onSubmit, submitLabel = 'Enregistrer
         }}
         placeholder="Auteur"
       />
-      {errors.author ? <Text style={styles.fieldError}>{errors.author}</Text> : null}
+  {errors.author ? <Text style={[styles.fieldError, { color: colors.danger }]}>{errors.author}</Text> : null}
 
-      <Text style={styles.label}>Éditeur</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Éditeur</Text>
       <TextInput
-        style={[styles.input, errors.editor ? { borderColor: '#d00' } : null]}
+        style={[styles.input, { borderColor: errors.editor ? colors.danger : colors.border, color: colors.text }, errors.editor ? { borderColor: colors.danger } : null]}
         value={editor}
         onChangeText={(v) => {
           setEditor(v);
@@ -142,11 +144,11 @@ export default function BookForm({ initial, onSubmit, submitLabel = 'Enregistrer
         }}
         placeholder="Éditeur"
       />
-      {errors.editor ? <Text style={styles.fieldError}>{errors.editor}</Text> : null}
+  {errors.editor ? <Text style={[styles.fieldError, { color: colors.danger }]}>{errors.editor}</Text> : null}
 
-      <Text style={styles.label}>Année</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Année</Text>
       <TextInput
-        style={[styles.input, errors.year ? { borderColor: '#d00' } : null]}
+        style={[styles.input, { borderColor: errors.year ? colors.danger : colors.border, color: colors.text }, errors.year ? { borderColor: colors.danger } : null]}
         value={year}
         onChangeText={(v) => {
           setYear(v);
@@ -155,13 +157,13 @@ export default function BookForm({ initial, onSubmit, submitLabel = 'Enregistrer
         placeholder="1999"
         keyboardType="numeric"
       />
-      {errors.year ? <Text style={styles.fieldError}>{errors.year}</Text> : null}
+  {errors.year ? <Text style={[styles.fieldError, { color: colors.danger }]}>{errors.year}</Text> : null}
 
-      <Text style={styles.label}>Cover (URL ou galerie)</Text>
+      <Text style={[styles.label, { color: colors.text }]}>Cover (URL ou galerie)</Text>
       <View style={styles.coverRow}>
-        <TextInput style={[styles.input, { flex: 1 }]} value={cover} onChangeText={setCover} placeholder="https://..." />
+        <TextInput style={[styles.input, { flex: 1, color: colors.text, borderColor: colors.border, backgroundColor: colors.card }]} value={cover} onChangeText={setCover} placeholder="https://..." placeholderTextColor={colors.muted} />
         <TouchableOpacity onPress={pickImage} style={styles.fileButton} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-          <MaterialIcons name="attach-file" size={20} color="#0666cc" />
+          <MaterialIcons name="attach-file" size={20} color={colors.primary} />
         </TouchableOpacity>
       </View>
 
@@ -174,11 +176,11 @@ export default function BookForm({ initial, onSubmit, submitLabel = 'Enregistrer
         </View>
       ) : null}
 
-      <Text style={styles.label}>Note</Text>
+  <Text style={[styles.label, { color: colors.text }]}>Note</Text>
       <BookRating rating={rating} onChange={setRating} />
 
       <View style={styles.button}>
-        <Button title={submitting ? 'Envoi...' : submitLabel} onPress={handleSubmit} disabled={submitting} />
+        <Button color={colors.primary} title={submitting ? 'Envoi...' : submitLabel} onPress={handleSubmit} disabled={submitting} />
       </View>
     </ScrollView>
   );

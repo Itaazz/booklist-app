@@ -1,14 +1,16 @@
 import { Text, View, StyleSheet } from 'react-native';
+import { useTheme } from '@/context/ThemeContext';
 import { useRouter } from 'expo-router';
 import { Button } from 'react-native';
   
 export default function Index() {
   const router = useRouter();
+  const { colors } = useTheme();
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Bienvenue dans ta bibliothèque</Text>
-      <Text style={styles.description}>
+    <View style={[styles.container, { backgroundColor: colors.background }] }>
+      <Text style={[styles.title, { color: colors.text }]}>Bienvenue dans ta bibliothèque</Text>
+      <Text style={[styles.description, { color: colors.muted }] }>
         Consulte tes livres et notes les comme tu le souhaites !
       </Text>
 

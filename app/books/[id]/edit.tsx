@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, View } from 'react-native';
+import { useTheme } from '@/context/ThemeContext';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import BookForm from '@/component/BookForm';
 import { getBook, updateBook } from '@/service/BookService';
@@ -11,6 +12,7 @@ export default function EditBook() {
   const id = Number(params.id);
 
   const [book, setBook] = useState<Partial<Book> | null>(null);
+  const { colors } = useTheme();
 
   useEffect(() => {
     let mounted = true;
@@ -28,14 +30,18 @@ export default function EditBook() {
   const handleSubmit = async (payload: any) => {
     try {
       const updated = await updateBook(id, payload);
-      router.push('/books');
-      Alert.alert('Succès', `Livre mis à jour (id: ${updated.id})`);
+  router.push('/books');
+  Alert.alert('Succès', 'Livre mis à jour');
     } catch (e: any) {
       Alert.alert('Erreur', e?.message ?? 'Erreur réseau');
     }
   };
 
-  if (!book) return <View style={{ flex: 1 }} />;
+  if (!book) return <View style={{ flex: 1, backgroundColor: colors.background }} />;
 
-  return <BookForm initial={book} onSubmit={handleSubmit} submitLabel="Mettre à jour" allowPartial />;
+  return (
+    <View style={{ flex: 1, backgroundColor: colors.background }}>
+      <BookForm initial={book} onSubmit={handleSubmit} submitLabel="Mettre à jour" allowPartial />
+    </View>
+  );
 }
